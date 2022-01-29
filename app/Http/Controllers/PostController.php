@@ -10,6 +10,13 @@ use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+
+    //construct
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
     public function index()
     {
 
