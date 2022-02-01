@@ -18,7 +18,7 @@ class PostFactory extends Factory
         return [
             'title' => $title,
             'slug' => Str::slug($title, '-'),
-            'content' => $this->faker->text(100),
+            'content' => $this->faker->text(200),
             'active'  => $this->faker->boolean()
 
         ];
