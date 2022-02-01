@@ -21,6 +21,10 @@ Route::get('/', function () {
 });
 
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/posts/archive', [PostController::class, 'archive'])->name('posts.archive');
+Route::get('/posts/all', [PostController::class, 'all'])->name('posts.all');
+Route::patch('/posts/{id}/restore ', [PostController::class, 'restore']);
+Route::delete('/posts/{id}/forceDelete ', [PostController::class, 'forceDelete']);
 Route::resource('/posts', PostController::class);
 
 Auth::routes();

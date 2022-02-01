@@ -14,21 +14,40 @@ class PostController extends Controller
     //construct
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('auth')->except(['index', 'show', 'archive', 'all']);
     }
 
+    //show non trashed posts
     public function index()
     {
 
-        $posts = POst::withCount('comments')->get();
+        $posts = Post::withCount('comments')->get();
 
 
-        return view('posts.index', ['posts' => $posts]);
+        return view('posts.index', ['posts' => $posts, 'tab' => 'list']);
+    }
+
+    //show trashed posts
+    public function archive()
+    {
+        $posts = Post::onlyTrashed()->withCount('comments')->get();
+
+        return view('posts.index', ['posts' => $posts, 'tab' => 'archive']);
+    }
+    //show all posts
+    public function all()
+    {
+
+        $posts = Post::withTrashed()->withCount('comments')->get();
+
+
+        return view('posts.index', ['posts' => $posts, 'tab' => 'all']);
     }
 
 
     public function show($id)
     {
+        //dd('rrr');
         return view('posts.show', [
             'post' => Post::find($id)
         ]);
@@ -83,5 +102,19 @@ class PostController extends Controller
         $post->delete();
         $request->session()->flash('status', 'post was deleted !!');
         return redirect()->route('posts.index');
+    }
+
+    public function restore($id)
+    {
+        $post = Post::onlyTrashed()->whereId($id)->first();
+        $post->restore();
+        return redirect()->route('posts.index')->with(['tab' => 'list']);
+    }
+
+    public function forceDelete($id)
+    {
+        $post = Post::onlyTrashed()->whereId($id)->first();
+        $post->forceDelete();
+        return redirect()->back();
     }
 }
