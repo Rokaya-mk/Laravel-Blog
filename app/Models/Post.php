@@ -29,4 +29,9 @@ class Post extends Model
             $post->comments()->restore();
         });
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
