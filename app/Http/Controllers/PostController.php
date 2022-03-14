@@ -6,6 +6,7 @@ use App\Http\Requests\StorePost;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -80,6 +81,7 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::findOrFail($id);
+        $this->authorize("update",$post);
         return view('posts.edit', [
             'post' => $post
         ]);
@@ -88,6 +90,11 @@ class PostController extends Controller
     public function update(StorePost $request, $id)
     {
         $post = Post::findOrFail($id);
+        //use gate denise
+        // if(Gate::denies("post.update",$post)){
+        //     abort(403,"you can not edit this post");
+        // }
+        $this->authorize("update",$post);
         $post->title = $request->input(['title']);
         $post->content = $request->input(['content']);
         $post->slug = Str::slug($request->input(['title']), '-');
@@ -99,6 +106,7 @@ class PostController extends Controller
     public function destroy(Request $request, $id)
     {
         $post = Post::findOrFail($id);
+        $this->authorize("delete",$post);
         $post->delete();
         $request->session()->flash('status', 'post was deleted !!');
         return redirect()->route('posts.index');
@@ -107,6 +115,7 @@ class PostController extends Controller
     public function restore($id)
     {
         $post = Post::onlyTrashed()->whereId($id)->first();
+        $this->authorize("restore",$post);
         $post->restore();
         return redirect()->route('posts.index')->with(['tab' => 'list']);
     }
@@ -114,6 +123,7 @@ class PostController extends Controller
     public function forceDelete($id)
     {
         $post = Post::onlyTrashed()->whereId($id)->first();
+        $this->authorize("restore",$post);
         $post->forceDelete();
         return redirect()->back();
     }

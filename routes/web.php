@@ -21,6 +21,7 @@ Route::get('/', function () {
 });
 
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/secret', [HomeController::class, 'secret'])->name('secret')->middleware('can:secret.page');
 Route::get('/posts/archive', [PostController::class, 'archive'])->name('posts.archive');
 Route::get('/posts/all', [PostController::class, 'all'])->name('posts.all');
 Route::patch('/posts/{id}/restore ', [PostController::class, 'restore']);

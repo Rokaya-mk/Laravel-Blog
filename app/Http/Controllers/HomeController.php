@@ -32,4 +32,10 @@ class HomeController extends Controller
         //dd(Auth::user()->email);
         return view('about');
     }
+
+    public function secret()
+    {
+        //dd(Auth::user()->email);
+        return view('secret');
+    }
 }

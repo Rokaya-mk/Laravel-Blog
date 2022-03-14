@@ -26,28 +26,39 @@
         <p>
             {{ $post->updated_at->diffForHumans() }}, by {{ $post->user->name }}
         </p>
-
+        @can('update',$post)
         <a class="btn btn-warning" href=" {{ route('posts.edit',['post' => $post->id]) }}">Edit</a>
+        @endcan
+
+        @cannot('delete',$post)
+        <span class="badge badge-danger"> you can't delete </span>
+        @endcannot
         @if(!$post->deleted_at)
+        @can('delete',$post)
         <form class="form-inline" method="POST" action=" {{route('posts.destroy',['post' => $post->id]) }} ">
             @csrf
             @method('DELETE')
 
             <button class="btn btn-danger" type="submit">Delete</button>
         </form>
+        @endcan
         @else
+        @can('restore',$post)
         <form class="form-inline" method="POST" action=" {{url('posts/'.$post->id.'/restore')}}">
             @csrf
             @method('PATCH')
 
             <button class="btn btn-success" type="submit">Restore</button>
         </form>
+        @endcan
+        @can('forceDelete',$post)
         <form class="form-inline" method="POST" action=" {{url('posts/'.$post->id.'/forceDelete')}}">
             @csrf
             @method('DELETE')
 
             <button class="btn btn-danger" type="submit">Force Delete</button>
         </form>
+        @endcan
         @endif
     </li>
     @empty
