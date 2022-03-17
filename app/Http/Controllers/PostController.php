@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -23,9 +24,15 @@ class PostController extends Controller
     {
 
         $posts = Post::withCount('comments')->get();
-
-
-        return view('posts.index', ['posts' => $posts, 'tab' => 'list']);
+        $mostCommented= Post::mostCommented()->take(5)->get();
+        $mostAciveUsers = User::mostActiveUsers()->take(5)->get();
+        $activeUserLastMonth = User::activeUserLastMonth()->take(5)->get();
+        return view('posts.index', [
+            'posts' => $posts, 
+            'mostCommented' => $mostCommented, 
+            'mostAciveUsers' => $mostAciveUsers,
+            'activeUserLastMonth' => $activeUserLastMonth,
+            'tab' => 'list']);
     }
 
     //show trashed posts
@@ -73,6 +80,7 @@ class PostController extends Controller
         $data = $request->only(['title', 'content']);
         $data['slug'] = Str::slug($data['title'], '-');
         $data['active'] = false;
+        $data['user_id'] = $request->user()->id;
         $post = Post::create($data);
         $request->session()->flash('status', 'post was created');
         return redirect()->route('posts.index');

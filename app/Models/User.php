@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,5 +47,19 @@ class User extends Authenticatable
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    //scope :users most actives
+    public function scopeMostActiveUsers(Builder $query){
+        return $query->withCount('posts')->orderBy('posts_count','desc');
+    }
+
+    //active users in last month
+    public function scopeActiveUserLastMonth(Builder $query){
+        return $query->withCount(['posts' => function($query){
+            $query->whereBetween(static::CREATED_AT,[now()->subMonths(1),now()]);
+        }])
+        ->having('posts_count','>',4)
+        ->orderBy('posts_count','desc');
     }
 }

@@ -12,4 +12,13 @@
     @endif
 
 </p>
+<h2>Comments</h2>
+<ul class="list-group">
+    @foreach($post->comments as $comment)
+    <li class="list-group-item">
+        <p> {{ $comment->content }} </p>
+        <span> {{ $comment->updated_at->diffForHumans() }} </span>
+    </li>
+    @endforeach
+</ul>
 @endsection
