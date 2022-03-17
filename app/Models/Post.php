@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Post extends Model
 {
@@ -36,6 +37,10 @@ class Post extends Model
             $post->comments()->delete();
         });
 
+        static::updating(function (Post $post) {
+            Cache::forget("post-show-{$post->id}");
+        });
+
         static::restoring(function (Post $post) {
             $post->comments()->restore();
         });
@@ -44,5 +49,9 @@ class Post extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    
+    public function tags(){
+        return $this->belongsToMany(Tag::class );
     }
 }

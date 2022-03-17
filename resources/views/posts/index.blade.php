@@ -53,6 +53,7 @@
                 {{-- <p>
                     {{ $post->updated_at->diffForHumans() }}, by {{ $post->user->name }}
                 </p> --}}
+            @auth
                 @can('update',$post)
                 <a class="btn btn-warning" href=" {{ route('posts.edit',['post' => $post->id]) }}">Edit</a>
                 @endcan
@@ -87,7 +88,7 @@
                 </form>
                 @endcan
                 @endif
-
+            @endauth
             </li>
             @empty
                 <span class="badge badge-danger">No post</span>

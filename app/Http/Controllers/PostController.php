@@ -6,6 +6,7 @@ use App\Http\Requests\StorePost;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
@@ -22,13 +23,18 @@ class PostController extends Controller
     //show non trashed posts
     public function index()
     {
-
-        $posts = Post::withCount('comments')->get();
-        $mostCommented= Post::mostCommented()->take(5)->get();
-        $mostAciveUsers = User::mostActiveUsers()->take(5)->get();
-        $activeUserLastMonth = User::activeUserLastMonth()->take(5)->get();
+        //use cache
+        $mostCommented = Cache::remember('mostCommented',now()->addSeconds(15),function(){
+            return Post::mostCommented()->take(5)->get();
+        });
+        $mostAciveUsers = Cache::remember('mostAciveUsers',now()->addSeconds(15),function(){
+            return User::mostActiveUsers()->take(5)->get();
+        });
+        $activeUserLastMonth = Cache::remember('activeUserLastMonth',now()->addSeconds(15),function(){
+            return User::activeUserLastMonth()->take(5)->get();
+        });
         return view('posts.index', [
-            'posts' => $posts, 
+            'posts' => Post::withCount('comments')->with('user')->get(), 
             'mostCommented' => $mostCommented, 
             'mostAciveUsers' => $mostAciveUsers,
             'activeUserLastMonth' => $activeUserLastMonth,
@@ -55,9 +61,12 @@ class PostController extends Controller
 
     public function show($id)
     {
-        //dd('rrr');
+        //add cache
+        $post = Cache::remember("post-show-{$id}",60,function() use ($id){
+            return Post::find($id);
+        });
         return view('posts.show', [
-            'post' => Post::find($id)
+            'post' => $post
         ]);
     }
 
@@ -108,7 +117,7 @@ class PostController extends Controller
         $post->slug = Str::slug($request->input(['title']), '-');
         $post->save();
         $request->session()->flash('status', 'post was updated !!');
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.show',['post' => $post]);
     }
 
     public function destroy(Request $request, $id)
