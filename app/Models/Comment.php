@@ -21,4 +21,8 @@ class Comment extends Model
     public function scopeDernier(Builder $query){
         return $query->orderBy(static::UPDATED_AT, 'desc');
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

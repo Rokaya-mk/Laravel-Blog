@@ -48,6 +48,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+    //comments
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
 
     //scope :users most actives
     public function scopeMostActiveUsers(Builder $query){

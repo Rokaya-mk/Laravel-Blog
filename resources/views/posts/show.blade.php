@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
-
-<h3>{{ $post->title }} </h3>
+<div class="row">
+    <div class="col-8">
+        <h3>{{ $post->title }} </h3>
 <p> {{ $post->content }} </p>
 <em> {{ $post->created_at }} </em>
 <p> Status:
@@ -12,13 +13,23 @@
     @endif
 
 </p>
+<x-tag :tags="$post->tags"></x-tag>
 <h2>Comments</h2>
-<ul class="list-group">
+<div >
     @foreach($post->comments as $comment)
-    <li class="list-group-item">
+
         <p> {{ $comment->content }} </p>
-        <span> {{ $comment->updated_at->diffForHumans() }} </span>
-    </li>
+        <p class="text-muted">
+
+            <x-updated :date="$comment->created_at" :name="$comment->user->name" ></x-updated>
+        </p>
+    
     @endforeach
-</ul>
+</div>
+    </div>
+    <div class="col-4">
+        @include('posts.sidebar')
+    </div>
+</div>
+
 @endsection

@@ -23,21 +23,10 @@ class PostController extends Controller
     //show non trashed posts
     public function index()
     {
-        //use cache
-        $mostCommented = Cache::remember('mostCommented',now()->addSeconds(15),function(){
-            return Post::mostCommented()->take(5)->get();
-        });
-        $mostAciveUsers = Cache::remember('mostAciveUsers',now()->addSeconds(15),function(){
-            return User::mostActiveUsers()->take(5)->get();
-        });
-        $activeUserLastMonth = Cache::remember('activeUserLastMonth',now()->addSeconds(15),function(){
-            return User::activeUserLastMonth()->take(5)->get();
-        });
+    
+       
         return view('posts.index', [
-            'posts' => Post::withCount('comments')->with('user')->get(), 
-            'mostCommented' => $mostCommented, 
-            'mostAciveUsers' => $mostAciveUsers,
-            'activeUserLastMonth' => $activeUserLastMonth,
+            'posts' => Post::withCount('comments')->with(['user','tags'])->get(), 
             'tab' => 'list']);
     }
 
@@ -63,7 +52,7 @@ class PostController extends Controller
     {
         //add cache
         $post = Cache::remember("post-show-{$id}",60,function() use ($id){
-            return Post::find($id);
+            return Post::with(['comments','tags'])->findOrFail($id);
         });
         return view('posts.show', [
             'post' => $post
