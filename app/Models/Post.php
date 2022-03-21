@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 
+
 class Post extends Model
 {
     use HasFactory;
@@ -25,7 +26,10 @@ class Post extends Model
     public function scopeMostCommented(Builder $query){
         return $query->withCount('comments')->orderBy('comments_count','desc');
     }
-
+    //local scope get postUsers with comments and tags
+    public function scopePostUserCommentsTags(Builder $query){
+        return $query->withCount('comments')->with(['user','tags']);
+    }
     //delete post with comments
     public static function boot()
     {
@@ -54,4 +58,11 @@ class Post extends Model
     public function tags(){
         return $this->belongsToMany(Tag::class );
     }
+
+    //one post has only one image
+    public function image(){
+        return $this->hasOne(Image::class);
+    }
+
+    
 }

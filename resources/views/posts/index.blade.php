@@ -24,6 +24,11 @@
                 @else 
                 <x-badge type='dark'>Old</x-badge>
                 @endif
+
+                @if($post->image)
+                <img src=" {{ $post->image->url() }} " alt="no image" class="img-fluid rounded " style="max-height:300px" >
+                @endif
+
                </p>
                 @if($post->trashed())
                 <del>
@@ -57,7 +62,7 @@
                 </p> --}}
             @auth
                 @can('update',$post)
-                <a class="btn btn-warning" href=" {{ route('posts.edit',['post' => $post->id]) }}">Edit</a>
+                <a class="btn btn-sm btn-warning" href=" {{ route('posts.edit',['post' => $post->id]) }}">Edit</a>
                 @endcan
         
                 @cannot('delete',$post)
@@ -69,7 +74,7 @@
                     @csrf
                     @method('DELETE')
         
-                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <button class="btn btn-sm btn-danger" type="submit">Delete</button>
                 </form>
                 @endcan
                 @else
@@ -78,7 +83,7 @@
                     @csrf
                     @method('PATCH')
         
-                    <button class="btn btn-success" type="submit">Restore</button>
+                    <button class="btn btn-sm btn-success" type="submit">Restore</button>
                 </form>
                 @endcan
                 @can('forceDelete',$post)
@@ -86,7 +91,7 @@
                     @csrf
                     @method('DELETE')
         
-                    <button class="btn btn-danger" type="submit">Force Delete</button>
+                    <button class="btn btn-sm btn-danger" type="submit">Force Delete</button>
                 </form>
                 @endcan
                 @endif

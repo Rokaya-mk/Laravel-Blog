@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostTagController;
 use Illuminate\Support\Facades\Auth;
@@ -33,3 +34,4 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/posts/tag/{id} ', [PostTagController::class, 'index'])->name('posts.tag');
+Route::post('/posts/comments/{post} ', [PostCommentController::class, 'store'])->name('posts.comment.store');

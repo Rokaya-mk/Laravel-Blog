@@ -10,7 +10,7 @@ class PostTagController extends Controller
     public function index($id){
         $tag = Tag::find($id);
         return view('posts.index',[
-            'posts' => $tag->posts,
+            'posts' => $tag->posts()->postUserCommentsTags()->get(),
            
         ]);
     }

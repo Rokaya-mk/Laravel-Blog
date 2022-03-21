@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -26,7 +28,7 @@ class PostController extends Controller
     
        
         return view('posts.index', [
-            'posts' => Post::withCount('comments')->with(['user','tags'])->get(), 
+            'posts' => Post::postUserCommentsTags()->get(), 
             'tab' => 'list']);
     }
 
@@ -52,7 +54,7 @@ class PostController extends Controller
     {
         //add cache
         $post = Cache::remember("post-show-{$id}",60,function() use ($id){
-            return Post::with(['comments','tags'])->findOrFail($id);
+            return Post::with(['comments','tags','comments.user'])->findOrFail($id);//eager method
         });
         return view('posts.show', [
             'post' => $post
@@ -74,14 +76,30 @@ class PostController extends Controller
         // $post->slug = Str::slug($post->title, '-');
         // $post->active = false;
         // $post->save();
+
+       
         //Method 2 to store a post
         $data = $request->only(['title', 'content']);
         $data['slug'] = Str::slug($data['title'], '-');
         $data['active'] = false;
         $data['user_id'] = $request->user()->id;
         $post = Post::create($data);
+
+         //store file 
+         $hasFile= $request->hasFile('picture');
+         if($hasFile){
+             $path = $request->file('picture')->store('posts');
+             $image = new Image(['path' => $path]);
+             $post->image()->save($image);
+             //dump($file);
+            // dump($file->getClientOriginalName());
+             //$file->store('myFiles');
+            // $name2= Storage::putFileAs('myFiles',$file,random_int(1,100).'.'.$file->guessExtension());
+             //dump(Storage::url($name2));
+         }
+ 
         $request->session()->flash('status', 'post was created');
-        return redirect()->route('posts.index');
+        return redirect()->route('posts.show',['post'=>$post]);
     }
 
     public function edit($id)
@@ -101,6 +119,23 @@ class PostController extends Controller
         //     abort(403,"you can not edit this post");
         // }
         $this->authorize("update",$post);
+
+        $hasFile= $request->hasFile('picture');
+         if($hasFile){
+             $path = $request->file('picture')->store('posts');
+             if($post->image){
+                 Storage::delete($post->image->path);
+                 $post->image->path = $path;
+                 $post->image->save();
+             }
+             else{
+                 $post->image->save(Image::create(['path' => $path]));
+             }
+            //  $image = new Image(['path' => $path]);
+            // $post->image()->save($image);
+            
+
+         }
         $post->title = $request->input(['title']);
         $post->content = $request->input(['content']);
         $post->slug = Str::slug($request->input(['title']), '-');

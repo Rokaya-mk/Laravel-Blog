@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <h1>Edit Post</h1>
-    <form method="POST" action=" {{route('posts.update',['post' => $post->id]) }} ">
+    <form class="container" method="POST" action=" {{route('posts.update',['post' => $post->id]) }} " enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @include('posts.form')

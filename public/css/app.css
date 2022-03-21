@@ -11286,3 +11286,10 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.badge > a{
+  color: #FFF;
+}
+
+.form-inline{
+  display: inline;
+}

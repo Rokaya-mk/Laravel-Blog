@@ -10,13 +10,13 @@ class ActivityComposer {
     public function compose(View $view){
         
         //use cache
-        $mostCommented = Cache::remember('mostCommented',now()->addSeconds(15),function(){
+        $mostCommented = Cache::remember('mostCommented',now()->addMinutes(15),function(){
             return Post::mostCommented()->take(5)->get();
         });
-        $mostAciveUsers = Cache::remember('mostAciveUsers',now()->addSeconds(15),function(){
+        $mostAciveUsers = Cache::remember('mostAciveUsers',now()->addMinutes(15),function(){
             return User::mostActiveUsers()->take(5)->get();
         });
-        $activeUserLastMonth = Cache::remember('activeUserLastMonth',now()->addSeconds(15),function(){
+        $activeUserLastMonth = Cache::remember('activeUserLastMonth',now()->addMinutes(15),function(){
             return User::activeUserLastMonth()->take(5)->get();
         });
 
