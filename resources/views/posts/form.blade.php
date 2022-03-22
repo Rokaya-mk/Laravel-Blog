@@ -7,8 +7,8 @@
     <input class="form-control" name="content" id="content" type="text" value=" {{ old('content', $post->content ?? null) }} ">
 </div>
 <div class="form-group">
-    <label for="picture">Picture</label>
-    <input type="file" name="picture" id="picture" class="form-control">
+    <label for="avatar">Picture</label>
+    <input type="file" name="avatar" id="avatar" class="form-control">
 </div>
 
 <x-errors my-class="warning"></x-errors>

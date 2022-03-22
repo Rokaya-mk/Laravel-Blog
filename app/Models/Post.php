@@ -22,6 +22,20 @@ class Post extends Model
         return $this->hasMany(Comment::class)->dernier();
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
+    public function tags(){
+        return $this->belongsToMany(Tag::class );
+    }
+
+    //one post has only one image:use morph
+    public function image(){
+        return $this->morphOne(Image::class,'imageable');
+    }
+
     //local scope :post mostComented
     public function scopeMostCommented(Builder $query){
         return $query->withCount('comments')->orderBy('comments_count','desc');
@@ -50,19 +64,7 @@ class Post extends Model
         });
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-    
-    public function tags(){
-        return $this->belongsToMany(Tag::class );
-    }
-
-    //one post has only one image
-    public function image(){
-        return $this->hasOne(Image::class);
-    }
+   
 
     
 }

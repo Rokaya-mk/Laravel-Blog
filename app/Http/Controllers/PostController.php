@@ -86,11 +86,13 @@ class PostController extends Controller
         $post = Post::create($data);
 
          //store file 
-         $hasFile= $request->hasFile('picture');
+         $hasFile= $request->hasFile('avatar');
          if($hasFile){
-             $path = $request->file('picture')->store('posts');
-             $image = new Image(['path' => $path]);
-             $post->image()->save($image);
+             $path = $request->file('avatar')->store('posts');
+            //  $image = new Image(['path' => $path]);
+            //  $post->image()->save($image);
+            //use morph
+            $post->image()->save(Image::make(['path' => $path]));
              //dump($file);
             // dump($file->getClientOriginalName());
              //$file->store('myFiles');
@@ -120,16 +122,18 @@ class PostController extends Controller
         // }
         $this->authorize("update",$post);
 
-        $hasFile= $request->hasFile('picture');
+        $hasFile= $request->hasFile('avatar');
          if($hasFile){
-             $path = $request->file('picture')->store('posts');
+             $path = $request->file('avatar')->store('posts');
              if($post->image){
                  Storage::delete($post->image->path);
                  $post->image->path = $path;
                  $post->image->save();
+                
              }
              else{
-                 $post->image->save(Image::create(['path' => $path]));
+                 //$post->image->save(Image::create(['path' => $path]));
+                 $post->image()->save(Image::make(['path' => $path]));
              }
             //  $image = new Image(['path' => $path]);
             // $post->image()->save($image);

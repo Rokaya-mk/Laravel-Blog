@@ -5,6 +5,6 @@
         @csrf
         @method('PUT')
         @include('posts.form')
-        <button class="btn btn-block btn-warning w-100" type="submit">Edit post</button>
+        <button class="btn btn-block btn-warning" type="submit">Edit post</button>
     </form>
 @endsection

@@ -52,6 +52,10 @@ class User extends Authenticatable
     public function comments(){
         return $this->hasMany(Comment::class);
     }
+    //use morhp with image model
+    public function image(){
+        return $this->morphOne(Image::class,'imageable');
+    }
 
     //scope :users most actives
     public function scopeMostActiveUsers(Builder $query){

@@ -12,8 +12,12 @@ class Image extends Model
     protected $fillable=['path'];
 
     //one image belong to one post
-    public function post(){
-        return $this->belongsTo(Post::class);
+    // public function post(){
+    //     return $this->belongsTo(Post::class);
+    // }
+    //use polymorphisme with post, user model
+    public function imageable(){
+        return $this->morphTo();
     }
     //get url of image
     public function url(){

@@ -8,10 +8,12 @@ class updated extends Component
 {
     public $date;
     public $name;
-    public function __construct($date,$name = null)
+    public $id;
+    public function __construct($date,$name = null, $id=null)
     {
         $this->date = $date->diffForHumans();
         $this->name = $name;
+        $this->id = $id;
     }
 
     /**
