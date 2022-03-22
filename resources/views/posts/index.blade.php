@@ -56,7 +56,7 @@
 
                 @endif
 
-                <x-updated :date="$post->updated_at" :name="$post->user->name" :id="$post->user->id" ></x-updated>
+                <x-updated :date="$post->updated_at" :name="$post->user->name" :userId="$post->user->id" ></x-updated>
                 {{-- <p>
                     {{ $post->updated_at->diffForHumans() }}, by {{ $post->user->name }}
                 </p> --}}

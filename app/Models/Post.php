@@ -17,9 +17,13 @@ class Post extends Model
     use SoftDeletes;
     protected $fillable = ['title', 'content', 'slug', 'active','user_id'];
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class)->dernier();
+    // public function comments()
+    // {
+    //     return $this->hasMany(Comment::class)->dernier();
+    // }
+    //add morph to comment
+    public function comments(){
+        return $this->morphMany(Comment::class,'commentable')->dernier();
     }
 
     public function user()

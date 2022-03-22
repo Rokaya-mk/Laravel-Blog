@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostTagController;
+use App\Http\Controllers\UserCommentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,8 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/posts/tag/{id} ', [PostTagController::class, 'index'])->name('posts.tag');
-Route::post('posts/comments/{post} ', [PostCommentController::class, 'store'])->name('posts.comment.store');
+Route::post('posts/comments/{post} ', [PostCommentController::class,'store'])->name('posts.comment.store');
 
 //User routes
 Route::resource('users', UserController::class)->only(['show','edit','update']);
+Route::resource('users.comments', UserCommentController::class)->only(['store']);

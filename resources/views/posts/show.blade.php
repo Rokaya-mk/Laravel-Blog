@@ -19,16 +19,11 @@
 <x-tag :tags="$post->tags"></x-tag>
 <h2>Comments</h2>
 <div >
-    @include('comments.form',['id' => $post->id])
-    @foreach($post->comments as $comment)
-
-        <p> {{ $comment->content }} </p>
-        <p class="text-muted">
-
-            <x-updated :date="$comment->created_at" :name="$comment->user->name" ></x-updated>
-        </p>
-    
-    @endforeach
+    {{-- comment page form  --}}
+    {{-- @include('comments.form',['id' => $post->id]) --}}
+    {{-- use comment-form component --}}
+    <x-comment-form :action="route('posts.comment.store',['post'=>$post->id])"></x-comment-form>
+    <x-comment-list :comments="$post->comments" ></x-comment-list>
 </div>
     </div>
     <div class="col-4">

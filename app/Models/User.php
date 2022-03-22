@@ -48,10 +48,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
-    //comments
-    public function comments(){
-        return $this->hasMany(Comment::class);
-    }
+   //add morph to comment
+   public function comments(){
+    return $this->morphMany(Comment::class,'commentable')->dernier();
+}
+
     //use morhp with image model
     public function image(){
         return $this->morphOne(Image::class,'imageable');

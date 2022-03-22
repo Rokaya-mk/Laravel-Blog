@@ -14,9 +14,13 @@ class Comment extends Model
     use SoftDeletes;
     protected $fillable= ['content','user_id'];
     //a comment belong to one post
-    public function post()
-    {
-        return $this->belongsTo(Post::class);
+    // public function post()
+    // {
+    //     return $this->belongsTo(Post::class);
+    // }
+    //add morph comment belong to a post or a user
+    public function commentable(){
+        return $this->morphTo();
     }
 
     //local Scope
@@ -31,7 +35,7 @@ class Comment extends Model
     public static function boot(){
         parent::boot();
         static::creating(function (Comment $comment) {
-            Cache::forget("post-show-{$comment->post->id}");
+            Cache::forget("post-show-{$comment->commentable->id}");
         });
     }
 }
