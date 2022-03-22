@@ -31,8 +31,12 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
     
+    // public function tags(){
+    //     return $this->belongsToMany(Tag::class );
+    // }
+    //add morph for tag
     public function tags(){
-        return $this->belongsToMany(Tag::class );
+        return $this->morphToMany(Tag::class,'taggable');
     }
 
     //one post has only one image:use morph

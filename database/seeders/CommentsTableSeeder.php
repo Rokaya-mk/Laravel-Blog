@@ -23,8 +23,21 @@ class CommentsTableSeeder extends Seeder
             return;
         }
         $nbComments = $this->command->ask("how many post you want to generate !", 30);
-        Comment::factory($nbComments)->make()->each(function ($comment) use ($posts,$users) {
-            $comment->post_id = $posts->random()->id;
+        // Comment::factory($nbComments)->make()->each(function ($comment) use ($posts,$users) {
+        //     $comment->post_id = $posts->random()->id;
+        //     $comment->user_id = $users->random()->id;
+        //     $comment->save();
+        // });
+        Comment::factory($nbComments)->make()->each(function ($comment) use ($posts, $users) {
+            $comment->commentable_id = $posts->random()->id;
+            $comment->commentable_type = 'App\Post';
+            $comment->user_id = $users->random()->id;
+            $comment->save();
+        });
+
+        Comment::factory($nbComments)->make()->each(function ($comment) use ($users) {
+            $comment->commentable_id = $users->random()->id;
+            $comment->commentable_type = 'App\User';
             $comment->user_id = $users->random()->id;
             $comment->save();
         });
