@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCommented;
 use App\Http\Requests\StoreComment;
 use App\Mail\CommentPosted;
 use App\Models\Post;
@@ -25,9 +26,10 @@ class PostCommentController extends Controller
         //use queue
         //Mail::to($post->user->email)->queue(new CommentPosted($comment));
         //uses later 
-        $delai = now()->addMinutes(1);
-        Mail::to($post->user->email)->later($delai,new CommentPosted($comment));
-
+        // $delai = now()->addMinutes(1);
+        // Mail::to($post->user->email)->later($delai,new CommentPosted($comment));
+        //use event & listener to send email
+        event(new PostCommented($comment));
         return redirect()->back();
     }
 }
