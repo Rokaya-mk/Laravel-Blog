@@ -59,17 +59,17 @@ class Post extends Model
         parent::boot();
 
         static::addGlobalScope(new LatestScope);
-        static::deleting(function (Post $post) {
-            $post->comments()->delete();
-        });
+        // static::deleting(function (Post $post) {
+        //     $post->comments()->delete();
+        // });
 
-        static::updating(function (Post $post) {
-            Cache::forget("post-show-{$post->id}");
-        });
+        // static::updating(function (Post $post) {
+        //     Cache::forget("post-show-{$post->id}");
+        // });
 
-        static::restoring(function (Post $post) {
-            $post->comments()->restore();
-        });
+        // static::restoring(function (Post $post) {
+        //     $post->comments()->restore();
+        // });
     }
 
    
