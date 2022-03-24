@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class CommentPosted extends Mailable
+class CommentPosted extends Mailable 
 {
     use Queueable, SerializesModels;
     //comment variable
@@ -29,6 +29,7 @@ class CommentPosted extends Mailable
      */
     public function build()
     {
+        //Post::new();
         $subject = "Comment Post for :".$this->comment->commentable->title;
         return $this
                 ->subject($subject)

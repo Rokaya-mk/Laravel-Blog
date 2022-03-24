@@ -37,10 +37,10 @@ class Comment extends Model
         return $query->orderBy(static::UPDATED_AT, 'desc');
     }
 
-    // public static function boot(){
-    //     parent::boot();
-    //     static::creating(function (Comment $comment) {
-    //         Cache::forget("post-show-{$comment->commentable->id}");
-    //     });
-    // }
+    public static function boot(){
+        parent::boot();
+        static::creating(function (Comment $comment) {
+            Cache::forget("post-show-{$comment->commentable->id}");
+        });
+    }
 }
